@@ -9,23 +9,42 @@ namespace GeneticAlgorithm
     private IGeneticAlgorithm _geneticAlgorithm;
     private FitnessEventHandler _fitnerssEventHandler;
     private int? _seed;
+    private IChromosome[] _chromosomes;
+
 
     // <summary>
     /// The average fitness across all Chromosomes
     /// </summary>
-    public double AverageFitness { get; }
+    public double AverageFitness { get{
+     
+       double totalFitness = 0;
+       foreach(var chromosome in _chromosomes){
+        totalFitness += chromosome.Fitness;
+       }
+
+       return totalFitness / _chromosomes.Length;
+      
+    } }
+
     /// <summary>
     /// The maximum fitness across all Chromosomes
     /// </summary>
-    public double MaxFitness { get; }
+    public double MaxFitness { get{
+       int highest = 0;
+       for(int i = 1; i < _chromosomes.Length; i++){
+        if(_chromosomes[highest].Fitness < _chromosomes[i].Fitness){
+          highest = i;
+        }
+       }
+       return _chromosomes[highest].Fitness;
+    } }
 
     /// <summary>
     /// Returns the number of Chromosomes in the generation
     /// </summary>
-    public long NumberOfChromosomes { get; }
+    public long NumberOfChromosomes { get =>  _chromosomes.Length; }
 
-    private IChromosome[] _chromosomes;
-
+   
 
     public Generation(IGeneticAlgorithm geneticAlgorithm, FitnessEventHandler fitnerssEventHandler, int? seed)
     {
@@ -64,7 +83,7 @@ namespace GeneticAlgorithm
     {
       get
       {
-
+          //TODO: validate index
           return _chromosomes[index];
 
       }
