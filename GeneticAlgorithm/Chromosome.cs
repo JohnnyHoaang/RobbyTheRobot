@@ -59,7 +59,7 @@ namespace GeneticAlgorithm
             }
             return newGenes;
         }
-        public List<int> GeneratePoints(int size)
+        private List<int> GeneratePoints(int size)
         {
             List<int> points = new List<int>();
             Random random = new Random();
