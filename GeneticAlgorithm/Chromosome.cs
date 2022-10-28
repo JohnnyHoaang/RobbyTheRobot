@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace GeneticAlgorithm
 {
-  internal class Chromosome : IChromosome
+  public class Chromosome : IChromosome
   {
     private int? _seed;
     public Chromosome(int[] genes, long length, int? seed = null)
@@ -77,14 +77,30 @@ namespace GeneticAlgorithm
       points.Sort();
       return points;
     }
+    public IChromosome[] Mutate(IChromosome[] chromosomes, double mutationProb)
+    {
+      Random random = new Random();
+      const int ACTIONS = 7;
+      foreach(IChromosome chromosome in chromosomes)
+      {
+        int randomIndex = random.Next(Convert.ToInt32(chromosome.Length));
+        int randomMutation = random.Next(ACTIONS);
+        // Mutates according to probability
+        if(random.NextDouble()<mutationProb)
+        {
+          chromosome.Genes[randomIndex] = randomMutation;
+        }
+      }
+      return chromosomes;
+    }
     public IChromosome[] Reproduce(IChromosome spouse, double mutationProb)
     {
       // Generates 2 points and cross chromosomes
       List<int> points = GeneratePoints(Convert.ToInt32(this.Length));
       IChromosome[] chromosomes = CrossChromosomes(spouse, points);
+      chromosomes = Mutate(chromosomes, mutationProb);
       return chromosomes;
     }
-
     public int CompareTo(IChromosome other)
     {
       return Fitness.CompareTo(other.Fitness);
