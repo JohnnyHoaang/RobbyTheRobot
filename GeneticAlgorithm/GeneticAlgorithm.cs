@@ -1,3 +1,4 @@
+using System;
 namespace GeneticAlgorithm
 {
   internal class GeneticAlgorithm : IGeneticAlgorithm
@@ -15,7 +16,6 @@ namespace GeneticAlgorithm
     public int NumberOfTrials { get; }
 
     public long GenerationCount { get; }
-
     public IGeneration CurrentGeneration { get; private set; }
 
     public FitnessEventHandler FitnessCalculation { get; }
@@ -27,7 +27,11 @@ namespace GeneticAlgorithm
       {
         CurrentGeneration = new Generation(this, FitnessCalculation, _seed);
       }
-      throw new System.NotImplementedException();
+      else
+      {
+        var bestChromosome = (int)(CurrentGeneration.NumberOfChromosomes * EliteRate / 100);
+      }
+      return CurrentGeneration;
     }
 
     public GeneticAlgorithm(int populationSize, int numberOfGenes, int lengthOfGene, double mutationRate, double eliteRate, int numberOfTrials, FitnessEventHandler fitnessCalculation, int? seed = null)
