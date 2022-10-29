@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 namespace GeneticAlgorithm
 {
-    public class Chromosome : IChromosome
+    internal class Chromosome : IChromosome
     {
         private int? _seed;
         public Chromosome(int[] genes, long length, int? seed = null)
         {
             if (length == 0)
                 throw new ApplicationException("Length cannot be 0");
-            Genes = genes;
+            Genes = Copy(genes);
             Length = length;
             _seed = seed;
         }
@@ -31,11 +31,11 @@ namespace GeneticAlgorithm
 
         public int this[int index] => Genes[index];
         // Crosses 2 parent chromosomes and returns 2 child chromosomes
-        private IChromosome[] CrossChromosomes(IChromosome spouse, List<int> points)
+        public IChromosome[] CrossChromosomes(IChromosome spouse, List<int> points)
         {
             int[] firstGenes = Copy(spouse.Genes);
             int[] secondGenes = Copy(Genes);
-            for (int i = 0; i < Length; i++)
+            for (int i = 0; i < Genes.Length; i++)
             {
                 if (i < points[0] || i > points[1])
                 {
@@ -77,26 +77,32 @@ namespace GeneticAlgorithm
             points.Sort();
             return points;
         }
-        private IChromosome[] Mutate(IChromosome[] chromosomes, double mutationProb)
+        public IChromosome[] Mutate(IChromosome[] chromosomes, double mutationProb)
         {
             Random random = new Random();
             const int ACTIONS = 7;
+            int count = 0;
             foreach (IChromosome chromosome in chromosomes)
             {
-                int randomIndex = random.Next(Convert.ToInt32(chromosome.Length));
-                int randomMutation = random.Next(ACTIONS);
+              count = 0;
+              // Iterates through each gene to check mutation possibilities
+              foreach(int gene in chromosome.Genes)
+              {
                 // Mutates according to probability
                 if (random.NextDouble() < mutationProb)
                 {
-                    chromosome.Genes[randomIndex] = randomMutation;
+                  int randomMutation = random.Next(ACTIONS);
+                  chromosome.Genes[count] = randomMutation;
+                  count++;
                 }
+              }
             }
             return chromosomes;
         }
         public IChromosome[] Reproduce(IChromosome spouse, double mutationProb)
         {
             // Generates 2 points and cross chromosomes
-            List<int> points = GeneratePoints(Convert.ToInt32(this.Length));
+            List<int> points = GeneratePoints(Convert.ToInt32(Genes.Length));
             IChromosome[] chromosomes = CrossChromosomes(spouse, points);
             chromosomes = Mutate(chromosomes, mutationProb);
             return chromosomes;
