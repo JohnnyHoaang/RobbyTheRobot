@@ -29,7 +29,7 @@ namespace GeneticAlgorithm
       }
       else
       {
-        var bestChromosome = (int)(CurrentGeneration.NumberOfChromosomes * EliteRate / 100);
+        var bestChromosomeCount = (int)(CurrentGeneration.NumberOfChromosomes * EliteRate / 100);
       }
       return CurrentGeneration;
     }
