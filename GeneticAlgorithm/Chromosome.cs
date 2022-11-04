@@ -23,7 +23,7 @@ namespace GeneticAlgorithm
             Length = chromosome.Length;
             Fitness = chromosome.Fitness;
         }
-        public double Fitness { get; private set; }
+        public double Fitness { get; set; }
 
         public int[] Genes { get; }
 

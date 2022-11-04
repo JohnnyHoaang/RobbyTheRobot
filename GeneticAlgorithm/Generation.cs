@@ -1,7 +1,8 @@
 namespace GeneticAlgorithm
 {
   using System;
-  public class Generation : IGeneration
+  using System.Collections.Generic;
+  public class Generation : IGenerationDetails
   {
 
     public delegate double FitnessEventHandler(IChromosome chromosome, IGeneration generation);
@@ -103,38 +104,53 @@ namespace GeneticAlgorithm
 
     // TODO :
 
-    internal class GenerationDetails : IGenerationDetails
+
+    /// <summary>
+    /// Randomly selects a parent by comparing its fitness to others in the population
+    /// </summary>
+    /// <returns></returns>
+    IChromosome IGenerationDetails.SelectParent()
     {
-      public double AverageFitness => throw new NotImplementedException();
+      Random random = new Random();
+      int size = 10;
+      int highest = random.Next((int)NumberOfChromosomes);
 
-      public double MaxFitness => throw new NotImplementedException();
 
-      public long NumberOfChromosomes => throw new NotImplementedException();
-
-      public IChromosome this[int index] => throw new NotImplementedException();
-
-      /// <summary>
-      /// Randomly selects a parent by comparing its fitness to others in the population
-      /// </summary>
-      /// <returns></returns>
-      IChromosome IGenerationDetails.SelectParent()
+      for (int i = 0; i < size; i++)
       {
-        throw new NotImplementedException();
+        int index = random.Next((int)NumberOfChromosomes);
+        if (_chromosomes[index].Fitness > _chromosomes[highest].Fitness)
+        {
+          highest = index;
+        }
       }
 
-      /// <summary>
-      /// Computes the fitness of all the Chromosomes in the generation. 
-      /// Note, a FitnessEventHandler deleagte is invoked for every fitness function that must be calculated and is provided by the user
-      /// Note, if NumberOfTrials is greater than 1 in IGeneticAlgorithm, 
-      /// the average of the number of trials is used to compute the final fitness of the Chromosome.
-      /// </summary>
-      void IGenerationDetails.EvaluateFitnessOfPopulation()
-      {
-        throw new NotImplementedException();
-      }
-
+      return _chromosomes[highest];
 
     }
+
+    /// <summary>
+    /// Computes the fitness of all the Chromosomes in the generation. 
+    /// Note, a FitnessEventHandler deleagte is invoked for every fitness function that must be calculated and is provided by the user
+    /// Note, if NumberOfTrials is greater than 1 in IGeneticAlgorithm, 
+    /// the average of the number of trials is used to compute the final fitness of the Chromosome.
+    /// </summary>
+    void IGenerationDetails.EvaluateFitnessOfPopulation()
+    {
+      double total = 0;
+      
+      foreach (Chromosome chromo in _chromosomes)
+      {
+        for (int i = 0; i < _geneticAlgorithm.NumberOfTrials; i++)
+        {
+          total = +_fitnessEventHandler.Invoke(chromo, this);
+        }
+        double averageFitness = total / _geneticAlgorithm.NumberOfTrials;
+        chromo.Fitness = averageFitness;
+      }
+
+    }
+
 
   }
 }
