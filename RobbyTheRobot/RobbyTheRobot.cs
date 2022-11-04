@@ -14,8 +14,8 @@ namespace RobbyTheRobot
         _seed = seed;
     }
     public int NumberOfActions { get; }
-    public int NumberOfTestGrids { get; }
-    public int GridSize { get; }
+    public int NumberOfTestGrids { get=> 100; }
+    public int GridSize { get=>10; }
     public int NumberOfGenerations { get; }
 
     public double MutationRate { get; }
@@ -31,13 +31,12 @@ namespace RobbyTheRobot
     /// <returns>Rectangular array of Contents filled with 50% Cans, and 50% Empty </returns>
     public ContentsOfGrid[,] GenerateRandomTestGrid()
     {
-        Random random = new Random();
-      const int numberOfCans = 50;
-      const int size = 10;
-      int positionX = random.Next(size);
-      int positionY = random.Next(size);
+      Random random = new Random();
+      int numberOfCans = Convert.ToInt32(NumberOfTestGrids/2);
+      int positionX = random.Next(GridSize);
+      int positionY = random.Next(GridSize);
       int count = 0;
-      ContentsOfGrid[,] grid = new ContentsOfGrid[size, size];
+      ContentsOfGrid[,] grid = new ContentsOfGrid[GridSize, GridSize];
       while (count < numberOfCans)
       {
         bool check = false;
@@ -45,8 +44,8 @@ namespace RobbyTheRobot
         {
           // Check if grid already has a can 
           if (grid[positionX, positionY] == ContentsOfGrid.Can){
-            positionX = random.Next(size);
-            positionY =  random.Next(size);
+            positionX = random.Next(GridSize);
+            positionY =  random.Next(GridSize);
           } else {
             check = true;
           }
