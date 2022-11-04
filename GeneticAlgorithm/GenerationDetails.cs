@@ -2,7 +2,7 @@ namespace GeneticAlgorithm
 {
   using System;
   using System.Collections.Generic;
-  public class Generation : IGenerationDetails
+  public class GenerationDetails : IGenerationDetails
   {
 
     public delegate double FitnessEventHandler(IChromosome chromosome, IGeneration generation);
@@ -58,7 +58,7 @@ namespace GeneticAlgorithm
 
 
 
-    public Generation(IGeneticAlgorithm geneticAlgorithm, FitnessEventHandler fitnessEventHandler, int? seed)
+    public GenerationDetails(IGeneticAlgorithm geneticAlgorithm, FitnessEventHandler fitnessEventHandler, int? seed)
     {
       if (geneticAlgorithm == null || fitnessEventHandler == null)
       {
@@ -70,7 +70,7 @@ namespace GeneticAlgorithm
     }
 
 
-    public Generation(IChromosome[] chromosome)
+    public GenerationDetails(IChromosome[] chromosome)
     {
       if (chromosome == null)
       {
@@ -138,17 +138,24 @@ namespace GeneticAlgorithm
     void IGenerationDetails.EvaluateFitnessOfPopulation()
     {
       double total = 0;
-      
-      foreach (Chromosome chromo in _chromosomes)
-      {
-        for (int i = 0; i < _geneticAlgorithm.NumberOfTrials; i++)
-        {
-          total = +_fitnessEventHandler.Invoke(chromo, this);
-        }
-        double averageFitness = total / _geneticAlgorithm.NumberOfTrials;
-        chromo.Fitness = averageFitness;
-      }
 
+      if (_geneticAlgorithm.NumberOfTrials > 1)
+      {
+        foreach (Chromosome chromo in _chromosomes)
+        {
+          for (int i = 0; i < _geneticAlgorithm.NumberOfTrials; i++)
+          {
+            total = +_fitnessEventHandler.Invoke(chromo, this);
+          }
+          double averageFitness = total / _geneticAlgorithm.NumberOfTrials;
+          chromo.Fitness = averageFitness;
+        }
+
+        List<IChromosome> list = new List<IChromosome>();
+        list.AddRange(_chromosomes);
+        list.Sort();
+        _chromosomes = list.ToArray();
+      }
     }
 
 
