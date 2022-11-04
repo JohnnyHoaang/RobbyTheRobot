@@ -81,5 +81,19 @@ namespace GeneticAlgorithmTest
       Assert.AreEqual(20, highestChromo.Fitness);
 
     }
+
+    [TestMethod]
+    public void EvaluatePopulationTest()
+    {
+      int[] arr = { 9, 11, 5, 7, 20, 19, 12, 3, 4, 7 };
+      IChromosome[] list = new Chromosome[10];
+
+      for (int i = 0; i < list.Length; i++)
+      {
+        Chromosome chromo = new Chromosome(null, 10, null);
+        chromo.Fitness = arr[i];
+        list[i] = chromo;
+      }
+    }
   }
 }
