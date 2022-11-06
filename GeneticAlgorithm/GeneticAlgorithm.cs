@@ -26,7 +26,7 @@ namespace GeneticAlgorithm
     {
       if (CurrentGeneration == null)
       {
-        CurrentGeneration = new GenerationDetails(this, FitnessCalculation, _seed);
+        //CurrentGeneration = new GenerationDetails(this, FitnessCalculation, _seed);
       }
       else
       {
@@ -48,7 +48,7 @@ namespace GeneticAlgorithm
             newGen.AddRange(bestChromosomes[i].Reproduce(bestChromosomes[i + 1], MutationRate));
           }
         }
-        CurrentGeneration = new GenerationDetails(newGen.ToArray());
+        //CurrentGeneration = new GenerationDetails(newGen.ToArray());
       }
       return CurrentGeneration;
     }
