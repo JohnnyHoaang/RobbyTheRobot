@@ -92,8 +92,8 @@ namespace RobbyTheRobot
         public double ComputeFitness(IChromosome chromosome, IGeneration generation)
         {
             Random random = new Random();
-            int x = 0;
-            int y = 0;
+            int x = random.Next(10);
+            int y = random.Next(10); 
             double fitness = RobbyHelper.ScoreForAllele(chromosome.Genes, GenerateRandomTestGrid(), random,ref x,ref y);
             return fitness;
         }
