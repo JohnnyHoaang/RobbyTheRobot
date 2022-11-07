@@ -61,15 +61,9 @@ namespace GeneticAlgorithm
         }
         private List<int> GeneratePoints(int size)
         {
-            Random random;
-            if (_seed == null)
-            {
-                random = new Random();
-            }
-            else
-            {
+            Random random = new Random();
+            if (_seed != null)
                 random = new Random((int)_seed);
-            }
             List<int> points = new List<int>();
 
             int first = 0;
@@ -88,15 +82,9 @@ namespace GeneticAlgorithm
         }
         private IChromosome[] Mutate(IChromosome[] chromosomes, double mutationProb)
         {
-            Random random;
-            if (_seed == null)
-            {
-                random = new Random();
-            }
-            else
-            {
+            Random random = new Random();
+            if (_seed != null)
                 random = new Random((int)_seed);
-            }
             int actions = (int)Length;
             int count = 0;
             foreach (IChromosome chromosome in chromosomes)
