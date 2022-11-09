@@ -48,7 +48,7 @@ namespace GeneticAlgorithm
             newGen.AddRange(bestChromosomes[i].Reproduce(bestChromosomes[i + 1], MutationRate));
           }
         }
-        //CurrentGeneration = new GenerationDetails(newGen.ToArray());
+        CurrentGeneration = new GenerationDetails(newGen.ToArray());
       }
       return CurrentGeneration;
     }
