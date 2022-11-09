@@ -5,8 +5,6 @@ namespace GeneticAlgorithm
   internal class GenerationDetails : IGenerationDetails
   {
 
-    public delegate double FitnessEventHandler(IChromosome chromosome, IGeneration generation);
-
     private IGeneticAlgorithm _geneticAlgorithm;
     private FitnessEventHandler _fitnessEventHandler;
     private int? _seed;
@@ -112,10 +110,11 @@ namespace GeneticAlgorithm
     IChromosome IGenerationDetails.SelectParent()
     {
       Random random = new Random();
-      if(_seed != null){
+      if (_seed != null)
+      {
         random = new Random((int)_seed);
       }
-      
+
       int size = 10;
       int highest = random.Next((int)NumberOfChromosomes);
 

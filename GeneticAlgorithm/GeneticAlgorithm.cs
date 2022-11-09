@@ -26,7 +26,7 @@ namespace GeneticAlgorithm
     {
       if (CurrentGeneration == null)
       {
-        //CurrentGeneration = new GenerationDetails(this, FitnessCalculation, _seed);
+        CurrentGeneration = new GenerationDetails(this, this.FitnessCalculation, _seed);
       }
       else
       {
