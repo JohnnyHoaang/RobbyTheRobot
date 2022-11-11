@@ -7,14 +7,14 @@ namespace GeneticAlgorithm
     internal class Chromosome : IChromosome
     {
         private int? _seed;
-        public Chromosome(int[] genes, long length, int? seed = null)
+        private int _numOfGenes;
+        public Chromosome(int numOfGenes, long length, int? seed = null)
         {
             // (int numberOfGenes, long length, int? seed = null)
             // generate random genes here
-            if (length == 0 || genes.Length == 0)
+            if (length == 0 || numOfGenes == 0)
                 throw new ApplicationException("Length cannot be 0");
-            
-            Genes = Copy(genes);
+            Genes = GenerateGenes();
             Length = length;
             _seed = seed;
         }
@@ -36,11 +36,18 @@ namespace GeneticAlgorithm
         // Crosses 2 parent chromosomes and returns 2 child chromosomes
         private int[] GenerateGenes()
         {
-            int [] genes =  new int[243];
+            Random random = new Random();
+            int [] genes =  new int[_numOfGenes];
+            for(int i=0; i<genes.Length; i++)
+            {
+                genes[i] = (int)random.Next((int)Length);
+            }
             return genes;
         }
         private IChromosome[] Crossover(IChromosome spouse, List<int> points)
         {
+            Chromosome firstChild = new Chromosome(_numOfGenes,Length);
+            Chromosome secondChild = new Chromosome(_numOfGenes,Length);
             int[] firstGenes = Copy(spouse.Genes);
             int[] secondGenes = Copy(Genes);
             for (int i = 0; i < Genes.Length; i++)
@@ -52,9 +59,9 @@ namespace GeneticAlgorithm
                     secondGenes[i] = spouse[i];
                 }
             }
-            IChromosome first = new Chromosome(firstGenes, firstGenes.Length);
-            IChromosome second = new Chromosome(secondGenes, secondGenes.Length);
-            IChromosome[] children = { first, second };
+            firstChild.Genes = firstGenes;
+            secondChild.Genes = secondGenes;
+            IChromosome[] children = { firstChild, secondChild };
             return children;
         }
         // Returns deep copy of given int array

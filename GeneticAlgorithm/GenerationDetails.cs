@@ -97,13 +97,7 @@ namespace GeneticAlgorithm
       // move to chromosomes constructor 
       for (int i = 0; i< chromosomes.Length; i++)
       {
-        int [] genes = new int[_geneticAlgorithm.NumberOfGenes];
-        chromosomes[i]= new Chromosome(genes, 7);
-        for (int j = 0; j< _geneticAlgorithm.NumberOfGenes; j++)
-        {
-          int actions = random.Next(7);
-          chromosomes[i].Genes[j] = actions;
-        }
+        chromosomes[i] = new Chromosome(_geneticAlgorithm.NumberOfGenes, _geneticAlgorithm.LengthOfGene);
       }
       return chromosomes;
     }
