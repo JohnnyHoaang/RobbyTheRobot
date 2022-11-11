@@ -12,8 +12,11 @@ namespace GeneticAlgorithm
         {
             // (int numberOfGenes, long length, int? seed = null)
             // generate random genes here
-            if (length == 0 || numOfGenes == 0)
+            if (length == 0)
                 throw new ApplicationException("Length cannot be 0");
+            else if(numOfGenes == 0)
+                throw new ApplicationException("Num of genes cannot be 0");
+            _numOfGenes = numOfGenes;
             Genes = GenerateGenes();
             Length = length;
             _seed = seed;
