@@ -4,9 +4,6 @@ namespace GeneticAlgorithm
   using System.Collections.Generic;
   internal class GenerationDetails : IGenerationDetails
   {
-
-    public delegate double FitnessEventHandler(IChromosome chromosome, IGeneration generation);
-
     private IGeneticAlgorithm _geneticAlgorithm;
     private FitnessEventHandler _fitnessEventHandler;
     private int? _seed;
@@ -58,19 +55,22 @@ namespace GeneticAlgorithm
 
 
 
-    public GenerationDetails(IGeneticAlgorithm geneticAlgorithm, FitnessEventHandler fitnessEventHandler, int? seed)
+    public GenerationDetails(IGeneticAlgorithm geneticAlgorithm, int? seed = null)
     {
+      FitnessEventHandler fitnessEventHandler = geneticAlgorithm.FitnessCalculation;
       if (geneticAlgorithm == null || fitnessEventHandler == null)
       {
         throw new NullReferenceException("null object");
       }
       _geneticAlgorithm = geneticAlgorithm;
+      // create a random generation
+      _chromosomes = GenerateFirstGeneration();
       _fitnessEventHandler = fitnessEventHandler;
       _seed = seed;
     }
 
 
-    public GenerationDetails(IChromosome[] chromosome)
+    public GenerationDetails(IChromosome[] chromosome, IGeneticAlgorithm geneticAlgorithm)
     {
       if (chromosome == null)
       {
@@ -84,7 +84,28 @@ namespace GeneticAlgorithm
         _chromosomes[i] = chromosome[i];
 
       }
+      _geneticAlgorithm = geneticAlgorithm;
+      _fitnessEventHandler = geneticAlgorithm.FitnessCalculation;
 
+    }
+
+    private IChromosome[] GenerateFirstGeneration()
+    {
+      Random random = new Random();
+      
+      IChromosome[] chromosomes = new Chromosome[_geneticAlgorithm.PopulationSize];
+      // move to chromosomes constructor 
+      for (int i = 0; i< chromosomes.Length; i++)
+      {
+        int [] genes = new int[_geneticAlgorithm.NumberOfGenes];
+        chromosomes[i]= new Chromosome(genes, 7);
+        for (int j = 0; j< _geneticAlgorithm.NumberOfGenes; j++)
+        {
+          int actions = random.Next(7);
+          chromosomes[i].Genes[j] = actions;
+        }
+      }
+      return chromosomes;
     }
 
     /// <summary>

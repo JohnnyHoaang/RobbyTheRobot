@@ -9,8 +9,11 @@ namespace GeneticAlgorithm
         private int? _seed;
         public Chromosome(int[] genes, long length, int? seed = null)
         {
+            // (int numberOfGenes, long length, int? seed = null)
+            // generate random genes here
             if (length == 0 || genes.Length == 0)
                 throw new ApplicationException("Length cannot be 0");
+            
             Genes = Copy(genes);
             Length = length;
             _seed = seed;
@@ -25,12 +28,17 @@ namespace GeneticAlgorithm
         }
         public double Fitness { get; set; }
 
-        public int[] Genes { get; }
+        public int[] Genes { get; set; }
 
         public long Length { get; }
 
         public int this[int index] => Genes[index];
         // Crosses 2 parent chromosomes and returns 2 child chromosomes
+        private int[] GenerateGenes()
+        {
+            int [] genes =  new int[243];
+            return genes;
+        }
         private IChromosome[] Crossover(IChromosome spouse, List<int> points)
         {
             int[] firstGenes = Copy(spouse.Genes);
