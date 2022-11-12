@@ -8,9 +8,8 @@ namespace GeneticAlgorithm
         private FitnessEventHandler _fitnessEventHandler;
         private int? _seed;
         private IChromosome[] _chromosomes;
-        public GenerationDetails(IGeneticAlgorithm geneticAlgorithm, int? seed = null)
+        public GenerationDetails(IGeneticAlgorithm geneticAlgorithm, FitnessEventHandler fitnessEventHandler, int? seed = null)
         {
-            FitnessEventHandler fitnessEventHandler = geneticAlgorithm.FitnessCalculation;
             if (geneticAlgorithm == null || fitnessEventHandler == null)
                 throw new NullReferenceException("null object");
 

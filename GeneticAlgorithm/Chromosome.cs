@@ -20,7 +20,7 @@ namespace GeneticAlgorithm
         public Chromosome(Chromosome chromosome)
         {
             if (chromosome == null)
-                throw new NullReferenceException("Chromosone cannot be null");
+                throw new NullReferenceException("Chromosome cannot be null");
             Genes = Copy(chromosome.Genes);
             Length = chromosome.Length;
             Fitness = chromosome.Fitness;
@@ -29,7 +29,7 @@ namespace GeneticAlgorithm
 
         public int[] Genes { get; set; }
 
-        public long Length { get; set; }
+        public long Length { get; }
 
         public int this[int index] => Genes[index];
         // Crosses 2 parent chromosomes and returns 2 child chromosomes
