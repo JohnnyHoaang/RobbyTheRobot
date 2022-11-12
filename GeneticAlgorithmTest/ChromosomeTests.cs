@@ -143,24 +143,34 @@ namespace GeneticAlgorithmTest
         }
         [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
-        public void constructorGenesTest()
+        public void constructorGenesErrorTest()
         {
             int genes = 0;
             Chromosome chromosome = new Chromosome(genes, 7);
         }
         [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
-        public void constructorLengthTest()
+        public void constructorLengthErrorTest()
         {
             int genes = 3;
             Chromosome chromosome = new Chromosome(genes, 0);
         }
         [TestMethod]
-        [ExpectedException(typeof(ApplicationException))]
-        public void copyConstructorTest()
+        [ExpectedException(typeof(NullReferenceException))]
+        public void copyConstructorErrorTest()
         {
             Chromosome chromosome = null;
             Chromosome newChromosome = new Chromosome(chromosome);
+        }
+        [TestMethod]
+        public void copyConstructorTest()
+        {
+            Chromosome chromosome = new Chromosome(10,7,2);
+            Chromosome copyChromosome = new Chromosome(chromosome);
+            for (int i = 0; i<chromosome.Genes.Length; i++)
+            {
+                Assert.AreEqual(chromosome[i], copyChromosome[i]);
+            }
         }
     }
 }
