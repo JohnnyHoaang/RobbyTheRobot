@@ -13,7 +13,7 @@ namespace GeneticAlgorithmTest
         [TestMethod]
         public void NumberOfChromosomesTest()
         {
-            IGenerationDetails generation = new GenerationDetails(geneticAlgorithm);
+            IGenerationDetails generation = new GenerationDetails(geneticAlgorithm, geneticAlgorithm.FitnessCalculation);
             Assert.AreEqual(200, generation.NumberOfChromosomes);
         }
 
@@ -81,14 +81,14 @@ namespace GeneticAlgorithmTest
         [ExpectedException(typeof(NullReferenceException))]
         public void nullConstructorErrorTest()
         {
-            GenerationDetails generationDetails = new GenerationDetails(null, null);
+            GenerationDetails generationDetails = new GenerationDetails(null, geneticAlgorithm.FitnessCalculation);
         }
 
         [TestMethod]
         [ExpectedException(typeof(NullReferenceException))]
         public void nullChromosomeConstructorErrorTest()
         {
-            GenerationDetails generationDetails = new GenerationDetails(null);
+            GenerationDetails generationDetails = new GenerationDetails(null, geneticAlgorithm.FitnessCalculation);
         }
         private static double CalculateFitness(IChromosome chromosome, IGeneration generation)
         {
