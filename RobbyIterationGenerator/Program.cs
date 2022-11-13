@@ -46,7 +46,7 @@ namespace RobbyIterationGenerator
             Task task = Task.Run(() =>
             {
                 stopwatch.Start();
-                //robby.GeneratePossibleSolutions(folderPath);
+                robby.GeneratePossibleSolutions(folderPath);
             });
 
             // Keeps generating until escape press
