@@ -25,7 +25,8 @@ namespace RobbyTheRobot
 
         public double EliteRate { get; }
 
-        public delegate void FileWriteAction(string fileName);
+        public delegate void FileWriteAction(string fileName, int progress);
+        public event FileWriteAction FileWritten;
 
         public ContentsOfGrid[,] GenerateRandomTestGrid()
         {
@@ -71,7 +72,9 @@ namespace RobbyTheRobot
 
         public void GeneratePossibleSolutions(string folderPath)
         {
+            FileWritten = ShowGenerationProgress;
             IGeneticAlgorithm geneticAlgorithm = GeneticLib.CreateGeneticAlgorithm(_populationSize, NumberOfActions, 7, 0.01, 0.10, _numberOfTrials, ComputeFitness);
+            int count = 0;
             int totalGenerations = 1000;
             int[] savedGenerations = { 1, 20, 100, 200, 500, 1000 };
             for (int i = 0; i < totalGenerations; i++)
@@ -93,18 +96,19 @@ namespace RobbyTheRobot
                     {
                         sw.WriteLine(solutions);
                         // Invoke event when file is written
-                        FileWritten.Invoke(fileName);
+                        count++;
+                        FileWritten.Invoke(fileName, count);
                         sw.Close();
                     }
                 }
             }
         }
-
-        /// <summary>
-        /// An event raised when a file is written to disk
-        /// </summary>
-        //event TODOMYCUSTOMDELEGATE FileWritten;
-        public event FileWriteAction FileWritten;
+        private void ShowGenerationProgress(String fileName, int progress)
+        {
+            Console.WriteLine("Generated file: " + fileName);
+            Console.WriteLine("Progress: " + progress + "out of 5 files generated");
+        }
+        
         public double ComputeFitness(IChromosome chromosome, IGeneration generation)
         {
             Random random = new Random();
