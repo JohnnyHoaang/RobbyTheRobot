@@ -24,17 +24,18 @@ namespace GeneticAlgorithm
     private int? _seed;
     public IGeneration GenerateGeneration()
     {
-      if (CurrentGeneration == null)
+      if (CurrentGeneration is null)
       {
-        CurrentGeneration = new GenerationDetails(this, this.FitnessCalculation, _seed);
+        this.CurrentGeneration = new GenerationDetails(this, this.FitnessCalculation, _seed);
       }
       else
       {
-        var bestChromosomeCount = (int)(CurrentGeneration.NumberOfChromosomes * EliteRate / 100);
+        Console.WriteLine(EliteRate);
+        var bestChromosomeCount = (int)(this.CurrentGeneration.NumberOfChromosomes * EliteRate / 100);
         IChromosome[] bestChromosomes = new IChromosome[bestChromosomeCount];
         List<IChromosome> newGen = new List<IChromosome>();
-
-        for (int i = 0; i <= bestChromosomeCount; i++)
+        Console.WriteLine(bestChromosomeCount);
+        for (int i = 0; i < bestChromosomeCount; i++)
         {
           bestChromosomes[i] = CurrentGeneration[i];
         }
@@ -48,7 +49,8 @@ namespace GeneticAlgorithm
             newGen.AddRange(bestChromosomes[i].Reproduce(bestChromosomes[i + 1], MutationRate));
           }
         }
-        CurrentGeneration = new GenerationDetails(newGen.ToArray());
+
+        CurrentGeneration = new GenerationDetails(newGen.ToArray(), this);
       }
       return CurrentGeneration;
     }
