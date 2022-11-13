@@ -11,14 +11,24 @@ namespace GeneticAlgorithmTest
     [TestMethod]
     public void GenerateGenerationTest()
     {
-      IGeneticAlgorithm geneticAlg = GeneticLib.CreateGeneticAlgorithm(10, 10, 10, 1.4, 50.0, 10, ComputeFitness, null);
+      IGeneticAlgorithm geneticAlg = GeneticLib.CreateGeneticAlgorithm(200, 10, 10, 1.4, 26.5, 10, ComputeFitness, null);
+
       IGeneration firstGen = geneticAlg.GenerateGeneration();
-      // Assert.AreEqual(geneticAlg.CurrentGeneration.NumberOfChromosomes, 10);
       Assert.AreEqual(geneticAlg.CurrentGeneration, firstGen);
+      Assert.AreEqual(firstGen.NumberOfChromosomes, 200);
+
       IGeneration secondGen = geneticAlg.GenerateGeneration();
-      // Assert.IsNull(geneticAlg.CurrentGeneration);
+      Assert.AreEqual(secondGen.NumberOfChromosomes, 200);
       Assert.AreEqual(geneticAlg.CurrentGeneration, secondGen);
 
+      Assert.AreNotEqual(firstGen, secondGen);
+      Assert.AreNotEqual(firstGen, geneticAlg.CurrentGeneration);
+
+      IGeneration thirdGen = geneticAlg.GenerateGeneration();
+
+      Assert.AreEqual(thirdGen.NumberOfChromosomes, 200);
+      Assert.AreEqual(geneticAlg.CurrentGeneration, thirdGen);
+      Assert.AreNotEqual(thirdGen, secondGen);
     }
   }
 }
