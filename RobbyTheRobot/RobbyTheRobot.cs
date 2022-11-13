@@ -20,7 +20,7 @@ namespace RobbyTheRobot
         public int NumberOfTestGrids { get => 100; }
         public int GridSize { get => 10; }
         public int NumberOfGenerations { get; }
-
+        // TODO: Hard code mutation rate and elite rate
         public double MutationRate { get; }
 
         public double EliteRate { get; }
