@@ -30,26 +30,32 @@ namespace GeneticAlgorithm
       }
       else
       {
-        Console.WriteLine(EliteRate);
         var bestChromosomeCount = (int)(this.CurrentGeneration.NumberOfChromosomes * EliteRate / 100);
+
+        if (bestChromosomeCount % 2 != 0)
+        {
+          bestChromosomeCount = bestChromosomeCount - 1;
+        }
+
         IChromosome[] bestChromosomes = new IChromosome[bestChromosomeCount];
         List<IChromosome> newGen = new List<IChromosome>();
-        Console.WriteLine(bestChromosomeCount);
+
         for (int i = 0; i < bestChromosomeCount; i++)
         {
           bestChromosomes[i] = CurrentGeneration[i];
         }
 
-        newGen.AddRange(bestChromosomes);
-
         while (newGen.Count < PopulationSize)
         {
-          for (int i = 0; i < bestChromosomes.Length; i += 2)
+          for (int i = 0; i < bestChromosomes.Length; i = i + 2)
           {
             newGen.AddRange(bestChromosomes[i].Reproduce(bestChromosomes[i + 1], MutationRate));
+            if (newGen.Count == PopulationSize)
+            {
+              break;
+            }
           }
         }
-
         CurrentGeneration = new GenerationDetails(newGen.ToArray(), this);
       }
       return CurrentGeneration;
