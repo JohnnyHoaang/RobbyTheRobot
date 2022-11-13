@@ -13,10 +13,13 @@ namespace GeneticAlgorithmTest
         public void ChromosomeCrossoverTest()
         {
             int seed = 5;
+            int numOfGenes = 7;
             int[] genes = new int[] { 1, 2, 3, 4, 5, 6, 7 };
-            Chromosome chromosome = new Chromosome(genes, 7, seed);
+            Chromosome chromosome = new Chromosome(numOfGenes, 7, seed);
+            chromosome.Genes = genes;
             int[] secondGenes = new int[] { 9, 8, 7, 6, 5, 4, 3 };
-            Chromosome secondChromosome = new Chromosome(secondGenes, 7);
+            Chromosome secondChromosome = new Chromosome(numOfGenes, 7);
+            secondChromosome.Genes = secondGenes;
             // seed = 5, points : [1,2]
             IChromosome[] chromosomes = chromosome.Reproduce(secondChromosome, 0.01);
             // still the same
@@ -40,10 +43,13 @@ namespace GeneticAlgorithmTest
         {
             int seed = 10;
             double mutationRate = 1;
+            int numOfGenes = 7;
             int[] genes = new int[] { 1, 2, 3, 4, 5, 6, 7 };
-            Chromosome chromosome = new Chromosome(genes, 7, seed);
+            Chromosome chromosome = new Chromosome(numOfGenes, 7, seed);
+            chromosome.Genes = genes;
             int[] secondGenes = new int[] { 9, 8, 7, 6, 5, 4, 3 };
-            Chromosome secondChromosome = new Chromosome(secondGenes, 7);
+            Chromosome secondChromosome = new Chromosome(numOfGenes, 7);
+            secondChromosome.Genes = secondGenes;
             // seed = 10, mutation rate = 1
             IChromosome[] chromosomes = chromosome.Reproduce(secondChromosome, mutationRate);
             for (int i = 0; i < genes.Length; i++)
@@ -57,10 +63,13 @@ namespace GeneticAlgorithmTest
         {
             int seed = 10;
             double mutationRate = 0;
+            int numOfGenes = 7;
             int[] genes = new int[] { 1, 2, 3, 4, 5, 6, 7 };
-            Chromosome chromosome = new Chromosome(genes, 7, seed);
+            Chromosome chromosome = new Chromosome(numOfGenes, 7, seed);
+            chromosome.Genes = genes;
             int[] secondGenes = new int[] { 9, 8, 7, 6, 5, 4, 3 };
-            Chromosome secondChromosome = new Chromosome(secondGenes, 7);
+            Chromosome secondChromosome = new Chromosome(numOfGenes, 7);
+            secondChromosome.Genes = secondGenes;
             // seed = 10, mutation rate = 1
             IChromosome[] chromosomes = chromosome.Reproduce(secondChromosome, mutationRate);
             for (int i = 0; i < genes.Length; i++)
@@ -80,10 +89,13 @@ namespace GeneticAlgorithmTest
         {
             int seed = 10;
             double mutationRate = 0.29;
+            int numOfGenes = 7;
             int[] genes = new int[] { 1, 2, 3, 4, 5, 6, 7 };
-            Chromosome chromosome = new Chromosome(genes, 7, seed);
+            Chromosome chromosome = new Chromosome(numOfGenes, 7, seed);
+            chromosome.Genes = genes;
             int[] secondGenes = new int[] { 9, 8, 7, 6, 5, 4, 3 };
-            Chromosome secondChromosome = new Chromosome(secondGenes, 7);
+            Chromosome secondChromosome = new Chromosome(numOfGenes, 7);
+            secondChromosome.Genes = secondGenes;
             // seed = 10, mutation rate = 0.29
             IChromosome[] chromosomes = chromosome.Reproduce(secondChromosome, mutationRate);
             // Mutated
@@ -113,10 +125,10 @@ namespace GeneticAlgorithmTest
         [TestMethod]
         public void SortFitnessTest()
         {
-            int[] genes = new int[] { 1, 2, 3 };
-            Chromosome chromosome = new Chromosome(genes, 7);
-            Chromosome secondChromosome = new Chromosome(genes, 7);
-            Chromosome thirdChromosome = new Chromosome(genes, 7);
+            int numOfGenes = 3;
+            Chromosome chromosome = new Chromosome(numOfGenes, 7);
+            Chromosome secondChromosome = new Chromosome(numOfGenes, 7);
+            Chromosome thirdChromosome = new Chromosome(numOfGenes, 7);
             chromosome.Fitness = 10;
             secondChromosome.Fitness = 54;
             thirdChromosome.Fitness = 29;
@@ -131,24 +143,34 @@ namespace GeneticAlgorithmTest
         }
         [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
-        public void constructorGenesTest()
+        public void constructorGenesErrorTest()
         {
-            int[] genes = { };
+            int genes = 0;
             Chromosome chromosome = new Chromosome(genes, 7);
         }
         [TestMethod]
         [ExpectedException(typeof(ApplicationException))]
-        public void constructorLengthTest()
+        public void constructorLengthErrorTest()
         {
-            int[] genes = { 1, 2, 3 };
+            int genes = 3;
             Chromosome chromosome = new Chromosome(genes, 0);
         }
         [TestMethod]
-        [ExpectedException(typeof(ApplicationException))]
-        public void copyConstructorTest()
+        [ExpectedException(typeof(NullReferenceException))]
+        public void copyConstructorErrorTest()
         {
             Chromosome chromosome = null;
             Chromosome newChromosome = new Chromosome(chromosome);
+        }
+        [TestMethod]
+        public void copyConstructorTest()
+        {
+            Chromosome chromosome = new Chromosome(10,7,2);
+            Chromosome copyChromosome = new Chromosome(chromosome);
+            for (int i = 0; i<chromosome.Genes.Length; i++)
+            {
+                Assert.AreEqual(chromosome[i], copyChromosome[i]);
+            }
         }
     }
 }
