@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using GeneticAlgorithm;
+
 namespace RobbyTheRobot
 {
     internal class RobbyTheRobot : IRobbyTheRobot
@@ -23,13 +25,8 @@ namespace RobbyTheRobot
 
         public double EliteRate { get; }
 
-        public delegate void FileWriteAction(string folderPath);
+        public delegate void FileWriteAction(string fileName);
 
-        /// <summary>
-        /// Used to generate a single test grid filled with cans in random locations. Half of 
-        /// the grid (rounded down) will be filled with cans. Use the GridSize to determine the size of the grid
-        /// </summary>
-        /// <returns>Rectangular array of Contents filled with 50% Cans, and 50% Empty </returns>
         public ContentsOfGrid[,] GenerateRandomTestGrid()
         {
             Random random = new Random();
@@ -72,16 +69,35 @@ namespace RobbyTheRobot
             return grid;
         }
 
-        /// <summary>
-        /// Generates a series of possible solutions based on the generations and saves them to disk.
-        /// The text files generated must contain a comma seperated list of the max score, number of moves to display in the gui and all the actions robby will take (i.e the genes in the Chromosome).
-        /// The top candidate of the 1st, 20th, 100, 200, 500 and 1000th generation will be saved.
-        /// </summary>
-        /// <param name="folderPath">The path of the folder where the text files will be saved</param>
         public void GeneratePossibleSolutions(string folderPath)
         {
-          IGeneticAlgorithm geneticAlgorithm = GeneticLib.CreateGeneticAlgorithm(_populationSize,NumberOfActions,7,0.01,0.10,_numberOfTrials,ComputeFitness);
-          
+            IGeneticAlgorithm geneticAlgorithm = GeneticLib.CreateGeneticAlgorithm(_populationSize, NumberOfActions, 7, 0.01, 0.10, _numberOfTrials, ComputeFitness);
+            int totalGenerations = 1000;
+            int[] savedGenerations = { 1, 20, 100, 200, 500, 1000 };
+            for (int i = 0; i < totalGenerations; i++)
+            {
+                IGeneration generation = geneticAlgorithm.GenerateGeneration();
+                // Check number of generations
+                if (savedGenerations.Contains(i + 1))
+                {
+                    // Choose best generation
+                    int[] highestGeneration = generation[0].Genes;
+                    string solutions = "";
+                    for (int j = 0; j < highestGeneration.Length; j++)
+                    {
+                        solutions += highestGeneration[j];
+                    }
+                    String fileName = String.Format("/solution{0}.txt", i + 1);
+                    // Write Generation solutions on file
+                    using (System.IO.StreamWriter sw = System.IO.File.CreateText(folderPath + fileName))
+                    {
+                        sw.WriteLine(solutions);
+                        // Invoke event when file is written
+                        FileWritten.Invoke(fileName);
+                        sw.Close();
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -93,8 +109,8 @@ namespace RobbyTheRobot
         {
             Random random = new Random();
             int x = random.Next(10);
-            int y = random.Next(10); 
-            double fitness = RobbyHelper.ScoreForAllele(chromosome.Genes, GenerateRandomTestGrid(), random,ref x,ref y);
+            int y = random.Next(10);
+            double fitness = RobbyHelper.ScoreForAllele(chromosome.Genes, GenerateRandomTestGrid(), random, ref x, ref y);
             return fitness;
         }
     }
