@@ -30,7 +30,7 @@ namespace GeneticAlgorithm
       }
       else
       {
-        var bestChromosomeCount = (int)(this.CurrentGeneration.NumberOfChromosomes * EliteRate / 100);
+        var bestChromosomeCount = (int)(this.CurrentGeneration.NumberOfChromosomes * EliteRate);
 
         if (bestChromosomeCount % 2 != 0)
         {
@@ -63,6 +63,14 @@ namespace GeneticAlgorithm
 
     public GeneticAlgorithm(int populationSize, int numberOfGenes, int lengthOfGene, double mutationRate, double eliteRate, int numberOfTrials, FitnessEventHandler fitnessCalculation, int? seed = null)
     {
+      if (mutationRate <= 0 || mutationRate >= 1)
+      {
+        throw new ApplicationException("Mutation rate should be a decimal between 0 and 1");
+      }
+      if (eliteRate <= 0 || eliteRate >= 1)
+      {
+        throw new ApplicationException("Elite rate should be a decimal between 0 and 1");
+      }
       PopulationSize = populationSize;
       NumberOfGenes = numberOfGenes;
       LengthOfGene = lengthOfGene;
