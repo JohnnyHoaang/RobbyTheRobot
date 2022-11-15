@@ -9,28 +9,24 @@ namespace RobbyTheRobot
         private int? _seed;
         private int _populationSize;
         private int _numberOfTrials;
-        private int _numberOfGenerations;
-        public RobbyTheRobot(int numberOfGenerations, int populationSize, int numberOfTrials, int? seed = null)
+
+        public RobbyTheRobot(int numberOfGenerations, int populationSize, int numberOfTrials, double mutationRate, double eliteRate, int? seed = null)
         {
-            _numberOfGenerations = numberOfGenerations;
+            NumberOfGenerations = numberOfGenerations;
             _populationSize = populationSize;
             _numberOfTrials = numberOfTrials;
+            MutationRate = mutationRate;
+            EliteRate = eliteRate;
             _seed = seed;
         }
         public int NumberOfActions { get => 200; }
         public int NumberOfTestGrids { get => 100; }
         public int GridSize { get => 10; }
         public int NumberOfGenerations
-        {
-            get => _numberOfGenerations;
-            set
-            {
-                _numberOfGenerations = value;
-            }
-        }
-        public double MutationRate { get; }
+        { get; set; }
+        public double MutationRate { get; set;}
 
-        public double EliteRate { get; }
+        public double EliteRate { get; set;}
 
         public delegate void FileWriteAction(string fileName, int progress);
         public event FileWriteAction FileWritten;

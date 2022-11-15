@@ -113,7 +113,7 @@ namespace GeneticAlgorithm
                   {
                       total += _fitnessEventHandler.Invoke(chromosome, this);
                   }
-                  
+
                   double averageFitness = total / _geneticAlgorithm.NumberOfTrials;
                   chromosome.Fitness = averageFitness;
               });
