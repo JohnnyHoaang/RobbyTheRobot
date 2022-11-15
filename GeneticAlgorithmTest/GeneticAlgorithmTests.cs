@@ -30,8 +30,8 @@ namespace GeneticAlgorithmTest
 
       IGeneration thirdGen = geneticAlg.GenerateGeneration();
 
-      // Comparing the genes and fitness of each chromosomes in the generation
-      for (int i = 0; i < 200; i++)
+      // Comparing the genes and fitness of each child chromosomes in the generation
+      for (int i = 50; i < 200; i++)
       {
         Assert.AreNotEqual(thirdGen[i].Genes, secondGen[i].Genes);
         Assert.AreNotEqual(secondGen[i].Fitness, firstGen[i].Fitness);
