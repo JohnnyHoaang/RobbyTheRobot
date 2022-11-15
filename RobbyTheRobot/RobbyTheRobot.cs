@@ -19,7 +19,14 @@ namespace RobbyTheRobot
         public int NumberOfActions { get => 200; }
         public int NumberOfTestGrids { get => 100; }
         public int GridSize { get => 10; }
-        public int NumberOfGenerations { get; }
+        public int NumberOfGenerations
+        {
+            get => 1000; 
+            set
+            {
+                NumberOfGenerations = value;
+            }
+        }
         // TODO: Hard code mutation rate and elite rate
         public double MutationRate { get; }
 
@@ -73,11 +80,10 @@ namespace RobbyTheRobot
         public void GeneratePossibleSolutions(string folderPath)
         {
             FileWritten = ShowGenerationProgress;
-            IGeneticAlgorithm geneticAlgorithm = GeneticLib.CreateGeneticAlgorithm(_populationSize, NumberOfActions, 7, 0.01, 0.10, _numberOfTrials, ComputeFitness);
+            IGeneticAlgorithm geneticAlgorithm = GeneticLib.CreateGeneticAlgorithm(_populationSize, 243, 7, 0.01, 0.10, _numberOfTrials, ComputeFitness);
             int count = 0;
-            int totalGenerations = 1000;
             int[] savedGenerations = { 1, 20, 100, 200, 500, 1000 };
-            for (int i = 0; i < totalGenerations; i++)
+            for (int i = 0; i < NumberOfGenerations; i++)
             {
                 IGeneration generation = geneticAlgorithm.GenerateGeneration();
                 // Check number of generations
@@ -85,16 +91,18 @@ namespace RobbyTheRobot
                 {
                     // Choose best generation
                     int[] highestGeneration = generation[0].Genes;
-                    string solutions = "";
+                    Console.WriteLine("Fitness: " + generation[0].Fitness);
+                    string genes = "";
                     for (int j = 0; j < highestGeneration.Length; j++)
                     {
-                        solutions += highestGeneration[j];
+                        genes += highestGeneration[j];
                     }
                     String fileName = String.Format("/solution{0}.txt", i + 1);
+                    String solution = String.Format("{0},{1},{2}", 500, NumberOfActions, genes);
                     // Write Generation solutions on file
                     using (System.IO.StreamWriter sw = System.IO.File.CreateText(folderPath + fileName))
                     {
-                        sw.WriteLine(solutions);
+                        sw.WriteLine(solution);
                         // Invoke event when file is written
                         count++;
                         FileWritten.Invoke(fileName, count);
@@ -106,15 +114,20 @@ namespace RobbyTheRobot
         private void ShowGenerationProgress(String fileName, int progress)
         {
             Console.WriteLine("Generated file: " + fileName);
-            Console.WriteLine("Progress: " + progress + "out of 5 files generated");
+            Console.WriteLine("Progress: " + progress + " out of 6 files generated");
         }
-        
+
         public double ComputeFitness(IChromosome chromosome, IGeneration generation)
         {
             Random random = new Random();
             int x = random.Next(10);
             int y = random.Next(10);
-            double fitness = RobbyHelper.ScoreForAllele(chromosome.Genes, GenerateRandomTestGrid(), random, ref x, ref y);
+            double fitness = 0;
+            ContentsOfGrid[,] grid = GenerateRandomTestGrid();
+            for (int i = 0; i < NumberOfActions; i++)
+            {
+                fitness += RobbyHelper.ScoreForAllele(chromosome.Genes, grid, random, ref x, ref y);
+            }
             return fitness;
         }
     }
