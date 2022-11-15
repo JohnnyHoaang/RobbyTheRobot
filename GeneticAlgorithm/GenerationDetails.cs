@@ -4,37 +4,54 @@ namespace GeneticAlgorithm
   using System.Collections.Generic;
   internal class GenerationDetails : IGenerationDetails
   {
-
-    public delegate double FitnessEventHandler(IChromosome chromosome, IGeneration generation);
-
     private IGeneticAlgorithm _geneticAlgorithm;
     private FitnessEventHandler _fitnessEventHandler;
     private int? _seed;
     private IChromosome[] _chromosomes;
+    public GenerationDetails(IGeneticAlgorithm geneticAlgorithm, FitnessEventHandler fitnessEventHandler, int? seed = null)
+    {
+      if (geneticAlgorithm == null || fitnessEventHandler == null)
+        throw new NullReferenceException("null object");
+
+      _geneticAlgorithm = geneticAlgorithm;
+      // create a random generation
+      _chromosomes = GenerateFirstGeneration();
+      _fitnessEventHandler = fitnessEventHandler;
+      _seed = seed;
+      if (_seed == null)
+        EvaluateFitnessOfPopulation();
+
+    }
 
 
-    // <summary>
-    /// The average fitness across all Chromosomes
-    /// </summary>
+    public GenerationDetails(IChromosome[] chromosome, IGeneticAlgorithm geneticAlgorithm, int? seed = null)
+    {
+      if (chromosome == null || geneticAlgorithm == null)
+        throw new NullReferenceException("null object");
+      // initialize array chromosomes
+      _chromosomes = new Chromosome[chromosome.Length];
+      for (int i = 0; i < chromosome.Length; i++)
+      {
+        _chromosomes[i] = chromosome[i];
+      }
+      _seed = seed;
+      _geneticAlgorithm = geneticAlgorithm;
+      _fitnessEventHandler = geneticAlgorithm.FitnessCalculation;
+      if (_seed == null)
+        EvaluateFitnessOfPopulation();
+    }
     public double AverageFitness
     {
       get
       {
-
         double totalFitness = 0;
-        foreach (var chromosome in _chromosomes)
+        foreach (IChromosome chromosome in _chromosomes)
         {
           totalFitness += chromosome.Fitness;
         }
-
         return totalFitness / _chromosomes.Length;
-
       }
     }
-
-    /// <summary>
-    /// The maximum fitness across all Chromosomes
-    /// </summary>
     public double MaxFitness
     {
       get
@@ -51,75 +68,25 @@ namespace GeneticAlgorithm
       }
     }
 
-    /// <summary>
-    /// Returns the number of Chromosomes in the generation
-    /// </summary>
     public long NumberOfChromosomes { get => _chromosomes.Length; }
 
-
-
-    public GenerationDetails(IGeneticAlgorithm geneticAlgorithm, FitnessEventHandler fitnessEventHandler, int? seed)
-    {
-      if (geneticAlgorithm == null || fitnessEventHandler == null)
-      {
-        throw new NullReferenceException("null object");
-      }
-      _geneticAlgorithm = geneticAlgorithm;
-      _fitnessEventHandler = fitnessEventHandler;
-      _seed = seed;
-    }
-
-
-    public GenerationDetails(IChromosome[] chromosome)
-    {
-      if (chromosome == null)
-      {
-        throw new NullReferenceException("null object");
-      }
-
-      // initialize array chromosomes
-      _chromosomes = new IChromosome[chromosome.Length];
-      for (int i = 0; i < chromosome.Length; i++)
-      {
-        _chromosomes[i] = chromosome[i];
-
-      }
-
-    }
-
-    /// <summary>
-    /// Retrieves the IChromosome from the generation
-    /// </summary>
-    /// <value>The selected IChromosome</value>
     public IChromosome this[int index]
     {
       get
       {
-        //TODO: validate index
         return _chromosomes[index];
-
       }
     }
-
-
-    // TODO :
-
-
-    /// <summary>
-    /// Randomly selects a parent by comparing its fitness to others in the population
-    /// </summary>
-    /// <returns></returns>
-    IChromosome IGenerationDetails.SelectParent()
+    public IChromosome SelectParent()
     {
       Random random = new Random();
-      if(_seed != null){
+      if (_seed != null)
         random = new Random((int)_seed);
-      }
-      
-      int size = 10;
+
+
+      int size = 20;
       int highest = random.Next((int)NumberOfChromosomes);
-
-
+      // Select highest parent based on subset of chromosomes
       for (int i = 0; i < size; i++)
       {
         int index = random.Next((int)NumberOfChromosomes);
@@ -128,40 +95,43 @@ namespace GeneticAlgorithm
           highest = index;
         }
       }
-
       return _chromosomes[highest];
-
     }
 
-    /// <summary>
-    /// Computes the fitness of all the Chromosomes in the generation. 
-    /// Note, a FitnessEventHandler deleagte is invoked for every fitness function that must be calculated and is provided by the user
-    /// Note, if NumberOfTrials is greater than 1 in IGeneticAlgorithm, 
-    /// the average of the number of trials is used to compute the final fitness of the Chromosome.
-    /// </summary>
-    void IGenerationDetails.EvaluateFitnessOfPopulation()
+    public void EvaluateFitnessOfPopulation()
     {
-      double total = 0;
+
 
       if (_geneticAlgorithm.NumberOfTrials > 1)
       {
-        foreach (Chromosome chromo in _chromosomes)
+        // Evaluate fitness for each chromosome
+        foreach (Chromosome chromosome in _chromosomes)
         {
+          double total = 0;
           for (int i = 0; i < _geneticAlgorithm.NumberOfTrials; i++)
           {
-            total = +_fitnessEventHandler.Invoke(chromo, this);
+            total += _fitnessEventHandler.Invoke(chromosome, this);
           }
           double averageFitness = total / _geneticAlgorithm.NumberOfTrials;
-          chromo.Fitness = averageFitness;
+          chromosome.Fitness = averageFitness;
         }
-
-        List<IChromosome> list = new List<IChromosome>();
-        list.AddRange(_chromosomes);
+        // Sort chromosomes based on their fitness after evaluation
+        List<IChromosome> list = new List<IChromosome>(_chromosomes);
         list.Sort();
         _chromosomes = list.ToArray();
       }
     }
+    private IChromosome[] GenerateFirstGeneration()
+    {
+      Random random = new Random();
 
-
+      IChromosome[] chromosomes = new Chromosome[_geneticAlgorithm.PopulationSize];
+      // move to chromosomes constructor 
+      for (int i = 0; i < chromosomes.Length; i++)
+      {
+        chromosomes[i] = new Chromosome(_geneticAlgorithm.NumberOfGenes, _geneticAlgorithm.LengthOfGene);
+      }
+      return chromosomes;
+    }
   }
 }

@@ -7,32 +7,58 @@ namespace GeneticAlgorithm
     internal class Chromosome : IChromosome
     {
         private int? _seed;
-        public Chromosome(int[] genes, long length, int? seed = null)
+        private int _numOfGenes;
+        public Chromosome(int numOfGenes, long length, int? seed = null)
         {
-            if (length == 0 || genes.Length == 0)
-                throw new ApplicationException("Length cannot be 0");
-            Genes = Copy(genes);
+            if (length == 0 || numOfGenes == 0)
+                throw new ApplicationException("Num of genes or Length cannot be 0");
+            _numOfGenes = numOfGenes;
             Length = length;
+            Genes = GenerateGenes();
             _seed = seed;
         }
         public Chromosome(Chromosome chromosome)
         {
             if (chromosome == null)
-                throw new ApplicationException("Chromosone cannot be null");
+                throw new NullReferenceException("Chromosome cannot be null");
             Genes = Copy(chromosome.Genes);
             Length = chromosome.Length;
             Fitness = chromosome.Fitness;
         }
         public double Fitness { get; set; }
 
-        public int[] Genes { get; }
+        public int[] Genes { get; set; }
 
         public long Length { get; }
 
         public int this[int index] => Genes[index];
         // Crosses 2 parent chromosomes and returns 2 child chromosomes
+        public IChromosome[] Reproduce(IChromosome spouse, double mutationProb)
+        {
+            // Generates 2 points and cross chromosomes
+            List<int> points = GeneratePoints(Convert.ToInt32(Genes.Length));
+            IChromosome[] chromosomes = Crossover(spouse, points);
+            chromosomes = Mutate(chromosomes, mutationProb);
+            return chromosomes;
+        }
+        public int CompareTo(IChromosome other)
+        {
+            return other.Fitness.CompareTo(Fitness);
+        }
+        private int[] GenerateGenes()
+        {
+            Random random = GetRandom();
+            int[] genes = new int[_numOfGenes];
+            for (int i = 0; i < genes.Length; i++)
+            {
+                genes[i] = random.Next((int)Length);
+            }
+            return genes;
+        }
         private IChromosome[] Crossover(IChromosome spouse, List<int> points)
         {
+            Chromosome firstChild = new Chromosome(_numOfGenes, Length);
+            Chromosome secondChild = new Chromosome(_numOfGenes, Length);
             int[] firstGenes = Copy(spouse.Genes);
             int[] secondGenes = Copy(Genes);
             for (int i = 0; i < Genes.Length; i++)
@@ -44,9 +70,9 @@ namespace GeneticAlgorithm
                     secondGenes[i] = spouse[i];
                 }
             }
-            IChromosome first = new Chromosome(firstGenes, firstGenes.Length);
-            IChromosome second = new Chromosome(secondGenes, secondGenes.Length);
-            IChromosome[] children = { first, second };
+            firstChild.Genes = firstGenes;
+            secondChild.Genes = secondGenes;
+            IChromosome[] children = { firstChild, secondChild };
             return children;
         }
         // Returns deep copy of given int array
@@ -61,9 +87,7 @@ namespace GeneticAlgorithm
         }
         private List<int> GeneratePoints(int size)
         {
-            Random random = new Random();
-            if (_seed != null)
-                random = new Random((int)_seed);
+            Random random = GetRandom();
             List<int> points = new List<int>();
 
             int first = 0;
@@ -82,9 +106,7 @@ namespace GeneticAlgorithm
         }
         private IChromosome[] Mutate(IChromosome[] chromosomes, double mutationProb)
         {
-            Random random = new Random();
-            if (_seed != null)
-                random = new Random((int)_seed);
+            Random random = GetRandom();
             int actions = (int)Length;
             int count = 0;
             foreach (IChromosome chromosome in chromosomes)
@@ -104,17 +126,15 @@ namespace GeneticAlgorithm
             }
             return chromosomes;
         }
-        public IChromosome[] Reproduce(IChromosome spouse, double mutationProb)
+        private Random GetRandom()
         {
-            // Generates 2 points and cross chromosomes
-            List<int> points = GeneratePoints(Convert.ToInt32(Genes.Length));
-            IChromosome[] chromosomes = Crossover(spouse, points);
-            chromosomes = Mutate(chromosomes, mutationProb);
-            return chromosomes;
-        }
-        public int CompareTo(IChromosome other)
-        {
-            return other.Fitness.CompareTo(Fitness);
+            Random random = new Random();
+            if (_seed != null)
+            {
+                random = new Random((int)_seed);
+            }
+
+            return random;
         }
     }
 }
