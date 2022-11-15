@@ -16,7 +16,7 @@ namespace RobbyIterationGenerator
                 try
                 {
                     // Receive input from user to create generation
-                    Console.WriteLine("Give input to generate Robby!");
+                    Console.WriteLine("Give input to generate Robby!\n");
                     Console.WriteLine("Enter the number of generations: ");
                     int numberOfGenerations = Int32.Parse(Console.ReadLine());
                     Console.WriteLine("Enter the population size: ");
@@ -40,8 +40,8 @@ namespace RobbyIterationGenerator
                 Directory.CreateDirectory(folderPath);
             }
             Stopwatch stopwatch = new Stopwatch();
-            Console.WriteLine("Generating generations...");
-            Console.WriteLine("Press ESC to stop");
+            Console.WriteLine("\nGenerating generations...");
+            Console.WriteLine("Press ESC to stop\n");
             CancellationTokenSource cancel = new CancellationTokenSource();
             Task task = Task.Run(() =>
             {
@@ -54,7 +54,6 @@ namespace RobbyIterationGenerator
             // Force stops generation
             cancel.Cancel();
             stopwatch.Stop();
-
             Console.WriteLine("Generation time: {0} seconds", (float)stopwatch.ElapsedMilliseconds / 1000);
         }
     }
