@@ -21,13 +21,12 @@ namespace RobbyTheRobot
         public int GridSize { get => 10; }
         public int NumberOfGenerations
         {
-            get => 1000; 
+            get => 1000;
             set
             {
                 NumberOfGenerations = value;
             }
         }
-        // TODO: Hard code mutation rate and elite rate
         public double MutationRate { get; }
 
         public double EliteRate { get; }
@@ -128,8 +127,10 @@ namespace RobbyTheRobot
             {
                 fitness += RobbyHelper.ScoreForAllele(chromosome.Genes, grid, random, ref x, ref y);
             }
+
             return fitness;
         }
     }
 }
+
 
