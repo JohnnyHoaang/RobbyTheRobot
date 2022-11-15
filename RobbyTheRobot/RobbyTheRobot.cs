@@ -4,14 +4,15 @@ using GeneticAlgorithm;
 
 namespace RobbyTheRobot
 {
-    internal class RobbyTheRobot : IRobbyTheRobot
+    public class RobbyTheRobot : IRobbyTheRobot
     {
         private int? _seed;
         private int _populationSize;
         private int _numberOfTrials;
+        private int _numberOfGenerations;
         public RobbyTheRobot(int numberOfGenerations, int populationSize, int numberOfTrials, int? seed = null)
         {
-            NumberOfGenerations = numberOfGenerations;
+            _numberOfGenerations = numberOfGenerations;
             _populationSize = populationSize;
             _numberOfTrials = numberOfTrials;
             _seed = seed;
@@ -21,10 +22,10 @@ namespace RobbyTheRobot
         public int GridSize { get => 10; }
         public int NumberOfGenerations
         {
-            get => 1000;
+            get => _numberOfGenerations;
             set
             {
-                NumberOfGenerations = value;
+                _numberOfGenerations = value;
             }
         }
         public double MutationRate { get; }
