@@ -80,7 +80,7 @@ namespace RobbyTheRobot
         public void GeneratePossibleSolutions(string folderPath)
         {
             FileWritten = ShowGenerationProgress;
-            IGeneticAlgorithm geneticAlgorithm = GeneticLib.CreateGeneticAlgorithm(_populationSize, 243, 7, 0.01, 0.10, _numberOfTrials, ComputeFitness);
+            IGeneticAlgorithm geneticAlgorithm = GeneticLib.CreateGeneticAlgorithm(_populationSize, 243, 7, 0.05, 0.10, _numberOfTrials, ComputeFitness);
             int count = 0;
             int[] savedGenerations = { 1, 20, 100, 200, 500, 1000 };
             for (int i = 0; i < NumberOfGenerations; i++)
