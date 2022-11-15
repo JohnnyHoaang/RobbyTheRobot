@@ -1,4 +1,5 @@
 ﻿using System;
+using RobbyTheRobot;
 
 namespace RobbyIterationGenerator
 {
