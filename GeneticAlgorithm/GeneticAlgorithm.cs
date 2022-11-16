@@ -44,7 +44,7 @@ namespace GeneticAlgorithm
         {
           bestChromosomes[i] = CurrentGeneration[i];
         }
-
+        newGen.AddRange(bestChromosomes);
         while (newGen.Count < PopulationSize)
         {
           for (int i = 0; i < bestChromosomes.Length; i = i + 2)
