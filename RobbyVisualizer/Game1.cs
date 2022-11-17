@@ -1,52 +1,49 @@
-﻿using Microsoft.Xna.Framework;
+﻿
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace RobbyVisualizer
 {
-    public class Game1 : Game
+  public class Game1 : Game
+  {
+    private GraphicsDeviceManager graphics;
+    private SpriteBatch spriteBatch;
+    private World sprite;
+
+    public Game1()
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
-
-        public Game1()
-        {
-            _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
-        }
-
-        protected override void Initialize()
-        {
-            // TODO: Add your initialization logic here
-
-            base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
-        }
-
-        protected override void Update(GameTime gameTime)
-        {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-            // TODO: Add your update logic here
-
-            base.Update(gameTime);
-        }
-
-        protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
-            base.Draw(gameTime);
-        }
+      this.graphics = new GraphicsDeviceManager((Game) this);
+      this.Content.RootDirectory = "Content";
     }
+
+    protected override void Initialize()
+    {
+      this.sprite = new World(this, this.graphics);
+      this.Components.Add((IGameComponent) this.sprite);
+      this.graphics.PreferredBackBufferHeight = 750;
+      this.graphics.PreferredBackBufferWidth = 650;
+      this.graphics.ApplyChanges();
+      base.Initialize();
+    }
+
+    protected override void LoadContent() => this.spriteBatch = new SpriteBatch(this.GraphicsDevice);
+
+    protected override void UnloadContent()
+    {
+    }
+
+    protected override void Update(GameTime gameTime)
+    {
+      if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+        this.Exit();
+      base.Update(gameTime);
+    }
+
+    protected override void Draw(GameTime gameTime)
+    {
+      this.GraphicsDevice.Clear(Color.Black);
+      base.Draw(gameTime);
+    }
+  }
 }
