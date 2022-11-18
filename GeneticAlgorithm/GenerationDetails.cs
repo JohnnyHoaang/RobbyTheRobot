@@ -2,6 +2,7 @@ namespace GeneticAlgorithm
 {
   using System;
   using System.Collections.Generic;
+  using System.Threading.Tasks;
   internal class GenerationDetails : IGenerationDetails
   {
     private IGeneticAlgorithm _geneticAlgorithm;
@@ -70,56 +71,41 @@ namespace GeneticAlgorithm
 
     public long NumberOfChromosomes { get => _chromosomes.Length; }
 
-    public IChromosome this[int index]
-    {
-      get
-      {
-        return _chromosomes[index];
-      }
-    }
+    public IChromosome this[int index] => _chromosomes[index];
+
     public IChromosome SelectParent()
     {
       Random random = new Random();
       if (_seed != null)
         random = new Random((int)_seed);
+      int count = 5;
+      IChromosome[] competitors = new IChromosome[count];
 
 
-      int size = 20;
-      int highest = random.Next((int)NumberOfChromosomes);
-      // Select highest parent based on subset of chromosomes
-      for (int i = 0; i < size; i++)
+      for (int i = 0; i < count; i++)
       {
-        int index = random.Next((int)NumberOfChromosomes);
-        if (_chromosomes[index].Fitness > _chromosomes[highest].Fitness)
-        {
-          highest = index;
-        }
+        competitors[i] = _chromosomes[random.Next(_chromosomes.Length)];
       }
-      return _chromosomes[highest];
+      Array.Sort(competitors);
+      return competitors[0];
     }
 
     public void EvaluateFitnessOfPopulation()
     {
-
-
-      if (_geneticAlgorithm.NumberOfTrials > 1)
+      // Evaluate fitness for each chromosome
+      Parallel.ForEach(_chromosomes as Chromosome[], chromosome =>
       {
-        // Evaluate fitness for each chromosome
-        foreach (Chromosome chromosome in _chromosomes)
+        double total = 0;
+        for (int i = 0; i < _geneticAlgorithm.NumberOfTrials; i++)
         {
-          double total = 0;
-          for (int i = 0; i < _geneticAlgorithm.NumberOfTrials; i++)
-          {
-            total += _fitnessEventHandler.Invoke(chromosome, this);
-          }
-          double averageFitness = total / _geneticAlgorithm.NumberOfTrials;
-          chromosome.Fitness = averageFitness;
+          total += _fitnessEventHandler.Invoke(chromosome, this);
         }
-        // Sort chromosomes based on their fitness after evaluation
-        List<IChromosome> list = new List<IChromosome>(_chromosomes);
-        list.Sort();
-        _chromosomes = list.ToArray();
-      }
+
+        double averageFitness = total / _geneticAlgorithm.NumberOfTrials;
+        chromosome.Fitness = averageFitness;
+      });
+      // Sort chromosomes based on their fitness after evaluation
+      Array.Sort(_chromosomes);
     }
     private IChromosome[] GenerateFirstGeneration()
     {
