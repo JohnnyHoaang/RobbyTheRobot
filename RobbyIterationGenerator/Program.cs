@@ -60,7 +60,6 @@ namespace RobbyIterationGenerator
       // Force stops generation
       ProcessDone(stopwatch);
     }
-
     private static void ProcessDone(Stopwatch stopwatch)
     {
       stopwatch.Stop();

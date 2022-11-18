@@ -9,6 +9,11 @@ namespace GeneticAlgorithm
     private FitnessEventHandler _fitnessEventHandler;
     private int? _seed;
     private IChromosome[] _chromosomes;
+
+    /// <summary>
+    /// Constructor that initializes the first generation
+    /// </summary>
+    /// <returns>Generation Details : IGeneration</returns>
     public GenerationDetails(IGeneticAlgorithm geneticAlgorithm, FitnessEventHandler fitnessEventHandler, int? seed = null)
     {
       if (geneticAlgorithm == null || fitnessEventHandler == null)
@@ -24,7 +29,10 @@ namespace GeneticAlgorithm
 
     }
 
-
+    /// <summary>
+    /// Constructor that creates subsequent generations
+    /// </summary>
+    /// <returns>Generation Details : IGeneration</returns>
     public GenerationDetails(IChromosome[] chromosome, IGeneticAlgorithm geneticAlgorithm, int? seed = null)
     {
       if (chromosome == null || geneticAlgorithm == null)
@@ -107,6 +115,10 @@ namespace GeneticAlgorithm
       // Sort chromosomes based on their fitness after evaluation
       Array.Sort(_chromosomes);
     }
+    /// <summary>
+    /// Initializes the array of chromosomes for the first generation
+    /// </summary>
+    /// <returns>Chromosomes : IChromosomes[]</returns>
     private IChromosome[] GenerateFirstGeneration()
     {
       Random random = new Random();

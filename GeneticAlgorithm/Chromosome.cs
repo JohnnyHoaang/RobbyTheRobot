@@ -7,6 +7,11 @@ namespace GeneticAlgorithm
   {
     private int? _seed;
     private int _numOfGenes;
+
+    /// <summary>
+    /// Constructor that creates a chromosome based on the number of genes, the length of genes and a possible seed
+    /// </summary>
+    /// <returns>Chromosome : IChromosome</returns>
     public Chromosome(int numOfGenes, long length, int? seed = null)
     {
       if (length == 0 || numOfGenes == 0)
@@ -16,6 +21,11 @@ namespace GeneticAlgorithm
       Genes = GenerateGenes();
       _seed = seed;
     }
+
+    /// <summary>
+    /// Constructor that creates a deep copy of a given array of chromosomes
+    /// </summary>
+    /// <returns>Chromosome : IChromosome</returns>
     public Chromosome(Chromosome chromosome)
     {
       if (chromosome == null)
@@ -44,6 +54,11 @@ namespace GeneticAlgorithm
     {
       return other.Fitness.CompareTo(Fitness);
     }
+
+    /// <summary>
+    /// Generate the genes for the chromosome
+    /// </summary>
+    /// <returns>Genes : int[]</returns>
     private int[] GenerateGenes()
     {
       Random random = GetRandom();
@@ -54,6 +69,11 @@ namespace GeneticAlgorithm
       }
       return genes;
     }
+
+    /// <summary>
+    /// Use by reproduce. This facilitates the reproduction of chromosomes and handles the crossing of genes
+    /// </summary>
+    /// <returns>Chromosome : IChromosome[]</returns>
     private IChromosome[] Crossover(IChromosome spouse, List<int> points)
     {
       Chromosome firstChild = new Chromosome(_numOfGenes, Length);
@@ -78,7 +98,11 @@ namespace GeneticAlgorithm
       IChromosome[] children = { firstChild, secondChild };
       return children;
     }
-    // Returns deep copy of given int array
+
+    /// <summary>
+    /// Creates a deep copy of the given array
+    /// </summary>
+    /// <returns>Genes : int[]</returns>
     private int[] Copy(int[] genes)
     {
       int[] newGenes = new int[genes.Length];
@@ -107,6 +131,11 @@ namespace GeneticAlgorithm
       points.Sort();
       return points;
     }
+
+    /// <summary>
+    /// Handles the mutation of a gene
+    /// </summary>
+    /// <returns>Chromosomes : IChromosome[]</returns>
     private IChromosome[] Mutate(IChromosome[] chromosomes, double mutationProb)
     {
       Random random = GetRandom();

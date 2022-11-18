@@ -10,6 +10,10 @@ namespace RobbyTheRobot
     private int _populationSize;
     private int _numberOfTrials;
 
+    /// <summary>
+    /// Constructor that creates a Robby
+    /// </summary>
+    /// <returns>Robby the robot : IRobbyTheRobot</returns>
     public RobbyTheRobot(int numberOfGenerations, int populationSize, int numberOfTrials, double mutationRate, double eliteRate, int? seed = null)
     {
       NumberOfGenerations = numberOfGenerations;
@@ -96,12 +100,21 @@ namespace RobbyTheRobot
         }
       }
     }
+
+    /// <summary>
+    /// Reports the progress of the file generation while running the genetic algorithm
+    /// </summary>
+    /// <returns>void</returns>
     private void ShowGenerationProgress(String fileName, int progress)
     {
       Console.WriteLine("Generated file: " + fileName);
       Console.WriteLine("Progress: " + progress + " out of 6 files generated");
     }
 
+    /// <summary>
+    /// Computes the fitness of each chromosome
+    /// </summary>
+    /// <returns>Fitness : double</returns>
     private double ComputeFitness(IChromosome chromosome, IGeneration generation)
     {
       Random random = new Random();
