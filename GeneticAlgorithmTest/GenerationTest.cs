@@ -54,9 +54,10 @@ namespace GeneticAlgorithmTest
         list[i] = chromosome;
       }
 
-      IGenerationDetails generation = new GenerationDetails(list, geneticAlgorithm, 7);
+      IGenerationDetails generation = new GenerationDetails(list, geneticAlgorithm, 5);
       // Get the chromosome with highest fitness based on subset
       IChromosome highestChromo = generation.SelectParent();
+      Assert.IsNotNull(highestChromo.Fitness);
       Assert.AreEqual(20, highestChromo.Fitness);
 
     }
