@@ -3,13 +3,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.IO;
+using System.Linq;
 using RobbyTheRobot;
 
 namespace RobbyVisualizer
 {
   public class World : DrawableGameComponent
   {
-    private IChromosome[] chromosone;
+    private int[][] chromosomes;
     private ContentsOfGrid[][,] testGrids;
     private SpriteBatch spriteBatch;
     private Texture2D tileTexture;
@@ -33,8 +34,8 @@ namespace RobbyVisualizer
     public World(Game1 game, GraphicsDeviceManager graphicsDeviceManager)
       : base((Game) game)
     {
-      this.chromosone = new IChromosome[76];
-      this.testGrids = new ContentsOfGrid[6][,];
+      this.chromosomes = new int[6][]; 
+      this.testGrids = new ContentsOfGrid[10][,];
       this.maxMove = new int[6];
       this.maxScore = new int[6];
       this.game = game;
@@ -52,10 +53,11 @@ namespace RobbyVisualizer
         string[] strArray = File.ReadAllText(index1.ToString() + ".txt").Split(',');
         this.maxScore[index1] = int.Parse(strArray[0]);
         this.maxMove[index1] = int.Parse(strArray[1]);
-        IChromosome[] genes = new IChromosome[strArray.Length - 3];
-        for (int index2 = 3; index2 < strArray.Length; ++index2)
-          genes[index2 - 3] = (IChromosome) Enum.Parse(typeof (IChromosome), strArray[index2]);
-        this.chromosone[index1] = new Chromosome(genes);
+        
+        string genesStr = strArray[2];
+        char[] genesChar = genesStr.ToCharArray();
+        int[] genes = Array.ConvertAll(genesChar, c => (int)Char.GetNumericValue(c));
+        this.chromosomes[index1] = genes;
       }
       for (int index = 0; index < this.testGrids.Length; ++index)
         this.testGrids[index] = robby.GenerateRandomTestGrid();
@@ -85,7 +87,7 @@ namespace RobbyVisualizer
           this.maxThrottle = 15;
         if (this.move <= this.maxMove[this.currentGrid])
         {
-          this.currentScore += (int)RobbyHelper.ScoreForAllele(this.chromosone[this.currentGrid].Genes, this.testGrids[this.currentGrid], World.rand, ref this.x, ref this.y);
+          this.currentScore += (int)RobbyHelper.ScoreForAllele(this.chromosomes[this.currentGrid], this.testGrids[this.currentGrid], World.rand, ref this.x, ref this.y);
           ++this.move;
         }
         else
