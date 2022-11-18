@@ -101,7 +101,7 @@ namespace GeneticAlgorithm
           total += _fitnessEventHandler.Invoke(chromosome, this);
         }
 
-        double averageFitness = total / _geneticAlgorithm.NumberOfTrials;
+        double averageFitness = total / (double)_geneticAlgorithm.NumberOfTrials;
         chromosome.Fitness = averageFitness;
       });
       // Sort chromosomes based on their fitness after evaluation
