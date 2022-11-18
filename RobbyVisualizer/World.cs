@@ -110,10 +110,10 @@ namespace RobbyVisualizer
               this.generation = "1";
               break;
             case 1:
-              this.generation = "10";
+              this.generation = "20";
               break;
             case 2:
-              this.generation = "50";
+              this.generation = "100";
               break;
             case 3:
               this.generation = "200";
