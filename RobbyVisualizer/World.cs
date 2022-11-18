@@ -30,7 +30,7 @@ namespace RobbyVisualizer
         private int tileSize;
         private string generation;
         private static Random rand = new Random();
-        private IRobbyTheRobot robby = Robby.CreateRobby(1000, 200, 100);
+        private IRobbyTheRobot robby = Robby.CreateRobby(1000, 200, 100,0.05,0.05);
         public World(RobbyVisualizerGame game, GraphicsDeviceManager graphicsDeviceManager)
           : base((Game)game)
         {
@@ -80,7 +80,7 @@ namespace RobbyVisualizer
             this.canTexture = this.game.Content.Load<Texture2D>("can");
             this.robbyTexture = this.game.Content.Load<Texture2D>("robby");
             this.spriteFont = this.game.Content.Load<SpriteFont>("File");
-            this.tileSize = 65;
+            this.tileSize = 60;
             base.LoadContent();
         }
 

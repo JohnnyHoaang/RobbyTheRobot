@@ -16,7 +16,7 @@ namespace GeneticAlgorithm
 
     public int NumberOfTrials { get; }
 
-    public long GenerationCount { get; }
+    public long GenerationCount { get; private set; }
     public IGeneration CurrentGeneration { get; private set; }
 
     public FitnessEventHandler FitnessCalculation { get; }
@@ -24,37 +24,29 @@ namespace GeneticAlgorithm
     private int? _seed;
     public IGeneration GenerateGeneration()
     {
+      GenerationCount++;
       if (CurrentGeneration is null)
       {
         this.CurrentGeneration = new GenerationDetails(this, this.FitnessCalculation, _seed);
       }
       else
       {
-        var bestChromosomeCount = (int)(this.CurrentGeneration.NumberOfChromosomes * EliteRate);
+        var elites = (int)(this.CurrentGeneration.NumberOfChromosomes * EliteRate);
 
-        if (bestChromosomeCount % 2 != 0)
-        {
-          bestChromosomeCount = bestChromosomeCount - 1;
-        }
-
-        IChromosome[] bestChromosomes = new IChromosome[bestChromosomeCount];
+        IChromosome[] bestChromosomes = new IChromosome[elites];
         List<IChromosome> newGen = new List<IChromosome>();
 
-        for (int i = 0; i < bestChromosomeCount; i++)
+        for (int i = 0; i < elites; i++)
         {
           bestChromosomes[i] = CurrentGeneration[i];
         }
         newGen.AddRange(bestChromosomes);
-        while (newGen.Count < PopulationSize)
+
+        while (newGen.Count < this.PopulationSize)
         {
-          for (int i = 0; i < bestChromosomes.Length; i = i + 2)
-          {
-            newGen.AddRange(bestChromosomes[i].Reproduce(bestChromosomes[i + 1], MutationRate));
-            if (newGen.Count == PopulationSize)
-            {
-              break;
-            }
-          }
+          IChromosome firstParent = ((GenerationDetails)CurrentGeneration).SelectParent();
+          IChromosome secondParent = ((GenerationDetails)CurrentGeneration).SelectParent();
+          newGen.AddRange(firstParent.Reproduce(secondParent, MutationRate));
         }
         CurrentGeneration = new GenerationDetails(newGen.ToArray(), this);
       }

@@ -21,6 +21,7 @@ namespace RobbyVisualizer
     {
       this.sprite = new World(this, this.graphics);
       this.Components.Add((IGameComponent) this.sprite);
+      
       this.graphics.PreferredBackBufferHeight = 750;
       this.graphics.PreferredBackBufferWidth = 650;
       this.graphics.ApplyChanges();

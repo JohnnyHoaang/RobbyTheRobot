@@ -23,8 +23,11 @@ namespace RobbyIterationGenerator
                     int populationSize = Int32.Parse(Console.ReadLine());
                     Console.WriteLine("Enter the number of trials: ");
                     int numberOfTrials = Int32.Parse(Console.ReadLine());
-
-                    robby = Robby.CreateRobby(numberOfGenerations, populationSize, numberOfTrials);
+                    Console.WriteLine("Enter the mutation rate: ");
+                    double mutationRate = Double.Parse(Console.ReadLine());
+                    Console.WriteLine("Enter the elite rate: ");
+                    double eliteRate = Double.Parse(Console.ReadLine());
+                    robby = Robby.CreateRobby(numberOfGenerations, populationSize, numberOfTrials, mutationRate, eliteRate);
                     break;
                 }
                 catch (Exception e)
@@ -48,8 +51,8 @@ namespace RobbyIterationGenerator
                 stopwatch.Start();
                 robby.GeneratePossibleSolutions(folderPath);
             });
-
             // Keeps generating until escape press
+            Console.WriteLine(task.IsCompleted);
             while (Console.ReadKey(true).Key != ConsoleKey.Escape || task.IsCompleted) ;
             // Force stops generation
             cancel.Cancel();
