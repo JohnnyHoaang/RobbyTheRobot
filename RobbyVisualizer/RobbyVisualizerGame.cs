@@ -13,15 +13,15 @@ namespace RobbyVisualizer
 
     public RobbyVisualizerGame()
     {
-      this.graphics = new GraphicsDeviceManager((Game) this);
+      this.graphics = new GraphicsDeviceManager((Game)this);
       this.Content.RootDirectory = "Content";
     }
 
     protected override void Initialize()
     {
       this.sprite = new World(this, this.graphics);
-      this.Components.Add((IGameComponent) this.sprite);
-      
+      this.Components.Add((IGameComponent)this.sprite);
+
       this.graphics.PreferredBackBufferHeight = 750;
       this.graphics.PreferredBackBufferWidth = 650;
       this.graphics.ApplyChanges();

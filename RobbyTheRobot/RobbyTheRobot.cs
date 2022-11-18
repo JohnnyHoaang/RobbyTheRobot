@@ -102,7 +102,7 @@ namespace RobbyTheRobot
       Console.WriteLine("Progress: " + progress + " out of 6 files generated");
     }
 
-    public double ComputeFitness(IChromosome chromosome, IGeneration generation)
+    private double ComputeFitness(IChromosome chromosome, IGeneration generation)
     {
       Random random = new Random();
       int x = random.Next(10);
