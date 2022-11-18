@@ -35,8 +35,7 @@ namespace RobbyIterationGenerator
           Console.WriteLine(e.Message + '\n');
         }
       }
-      Console.WriteLine("Enter folder name that will hold generation results:");
-      String folderPath = "./" + Console.ReadLine();
+      String folderPath = "../RobbyVisualizer/generations";
       if (!Directory.Exists(folderPath))
       {
         // Create Directory if does not exist
@@ -52,7 +51,6 @@ namespace RobbyIterationGenerator
         robby.GeneratePossibleSolutions(folderPath);
       });
       // Keeps generating until escape press
-      Console.WriteLine(task.IsCompleted);
       Console.CancelKeyPress += (o, e) =>
       {
         ProcessDone(stopwatch);
