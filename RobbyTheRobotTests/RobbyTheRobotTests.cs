@@ -9,7 +9,7 @@ namespace RobbyTheRobotTests
     [TestMethod]
     public void GenerateGridTest()
     {
-      IRobbyTheRobot robby = Robby.CreateRobby(100, 243, 100);
+      IRobbyTheRobot robby = Robby.CreateRobby(100, 243, 100, 0.05, 0.05);
       ContentsOfGrid[,] grid = robby.GenerateRandomTestGrid();
       int canCount = 0;
       int emptyCount = 0;

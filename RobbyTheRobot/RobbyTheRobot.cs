@@ -82,7 +82,7 @@ namespace RobbyTheRobot
           {
             genes += highestGeneration[j];
           }
-          String fileName = String.Format("/solution{0}.txt", i + 1);
+          String fileName = String.Format("/generation{0}.txt", i + 1);
           String solution = String.Format("{0},{1},{2}", 500, NumberOfActions, genes);
           // Write Generation solutions on file
           using (System.IO.StreamWriter sw = System.IO.File.CreateText(folderPath + fileName))
