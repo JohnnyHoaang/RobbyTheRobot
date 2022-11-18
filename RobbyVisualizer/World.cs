@@ -76,11 +76,11 @@ namespace RobbyVisualizer
         protected override void LoadContent()
         {
             this.spriteBatch = new SpriteBatch(this.GraphicsDevice);
-            this.tileTexture = this.game.Content.Load<Texture2D>("tile");
-            this.canTexture = this.game.Content.Load<Texture2D>("can");
-            this.robbyTexture = this.game.Content.Load<Texture2D>("robby");
+            this.tileTexture = this.game.Content.Load<Texture2D>("bluetile");
+            this.canTexture = this.game.Content.Load<Texture2D>("fish");
+            this.robbyTexture = this.game.Content.Load<Texture2D>("cat");
             this.spriteFont = this.game.Content.Load<SpriteFont>("File");
-            this.tileSize = 60;
+            this.tileSize = 65;
             base.LoadContent();
         }
 
