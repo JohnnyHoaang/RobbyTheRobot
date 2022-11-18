@@ -55,9 +55,7 @@ namespace GeneticAlgorithmTest
             IChromosome[] chromosomes = chromosome.Reproduce(secondChromosome, mutationRate);
             Assert.IsFalse(Array.Equals(chromosomes[0].Genes, genes));
             Assert.IsFalse(Array.Equals(chromosomes[1].Genes, genes));
-
-            // 1 1 5 4 5 5 4 
-            // 1 0 0 1 5 6 7
+            // Expected Results = [[1, 1, 5, 4, 5, 5, 4],[1, 0, 0, 1, 5, 6, 7]]
         }
         [TestMethod]
         public void MutateWithLowRateTest()
